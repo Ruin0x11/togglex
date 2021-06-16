@@ -8,9 +8,9 @@ defmodule Togglex.Mixfile do
       elixir: "~> 1.2",
       build_embedded: Mix.env == :prod,
       start_permanent: Mix.env == :prod,
-      deps: deps,
-      description: description,
-      package: package,
+      deps: deps(),
+      description: description(),
+      package: package(),
       test_coverage: [tool: ExCoveralls],
       preferred_cli_env: cli_env_for(:test, [
         "coveralls", "coveralls.detail", "coveralls.post",
@@ -22,7 +22,7 @@ defmodule Togglex.Mixfile do
   #
   # Type "mix help compile.app" for more information
   def application do
-    [applications: [:httpoison]]
+    [applications: [:httpoison, :jason]]
   end
 
   defp description do
@@ -42,10 +42,10 @@ defmodule Togglex.Mixfile do
   # Type "mix help deps" for more examples and options
   defp deps do
     [
-      {:poison, "~> 2.2.0"},
-      {:httpoison, "~> 0.10.0"},
-      {:excoveralls, "~> 0.5.1", only: :test},
-      {:exvcr, "~> 0.7.1", only: :test},
+      {:jason, "~> 1.0"},
+      {:httpoison, "~> 1.8.0"},
+      {:excoveralls, "~> 0.14.1", only: :test},
+      {:exvcr, "~> 0.12.3", only: :test},
       {:meck, "~> 0.8.4", only: :test },
       # Docs
       {:ex_doc, "~> 0.11.4", only: :docs},

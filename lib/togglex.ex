@@ -8,19 +8,11 @@ defmodule Togglex do
   """
 
   @user_agent [{"User-agent", "togglex"}]
-  @type response :: nil | binary | Poison.Parser.t
-
-  @spec process_response(HTTPoison.Response.t) :: response
-  # def process_response(%HTTPoison.Response{status_code: 200, body: ""}), do: nil
-  # def process_response(%HTTPoison.Response{status_code: 200, body: body, headers: headers}) when is_json_response(headers), do: Poison.decode!(body, keys: :atoms)
-  # def process_response(%HTTPoison.Response{status_code: 200, body: body, headers: headers}) when is_pdf_response(headers), do: body
-  # def process_response(%HTTPoison.Response{status_code: status_code, body: ""}), do: { status_code, nil }
-  # def process_response(%HTTPoison.Response{status_code: status_code, body: body }), do: { status_code, Poison.decode!(body, keys: :atoms) }
-
+  @type response :: nil | binary | map
 
   def process_response(response) do
     cond do
-      is_json_response(response) -> Poison.decode!(response.body, keys: :atoms)
+      is_json_response(response) -> Jason.decode!(response.body, keys: :atoms)
       is_pdf_response(response) -> response.body
       true -> nil
     end
@@ -52,8 +44,8 @@ defmodule Togglex do
   end
 
   def json_request(method, url, body \\ "", headers \\ [], options \\ []) do
-    body = if String.trim(body) == "", do: body, else: Poison.encode!(body)
-    request!(method, url, body, headers, options) |> process_response
+    body = if String.trim(body) == "", do: body, else: Jason.encode!(body)
+    request!(method, url, body, headers, options)
   end
 
   @spec authorization_header(Client.auth, list) :: list
@@ -76,15 +68,18 @@ defmodule Togglex do
   defp build_qs([]), do: ""
   defp build_qs(kvs), do: to_string('?' ++ URI.encode_query(kvs))
 
+  defp is_content_type(response, type) do
+    case Enum.find(response.headers, fn(x) -> elem(x, 0) == "Content-Type" end) do
+      nil -> false
+      header -> elem(header, 1) |> String.contains?(type)
+    end
+  end
+
   defp is_json_response(response) do
-    Enum.find(response.headers, fn(x) -> elem(x, 0) == "Content-Type" end)
-    |> elem(1)
-    |> String.contains?("application/json")
+    is_content_type(response, "application/json")
   end
 
   defp is_pdf_response(response) do
-    Enum.find(response.headers, fn(x) -> elem(x, 0) == "Content-Type" end)
-    |> elem(1)
-    |> String.contains?("application/pdf")
+    is_content_type(response, "application/pdf")
   end
 end

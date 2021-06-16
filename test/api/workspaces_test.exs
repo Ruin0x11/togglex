@@ -13,7 +13,7 @@ defmodule Togglex.Api.WorkspacesTest do
   end
 
   test "list/1" do
-    use_cassette "workspaces#list" do
+    use_cassette "workspaces/list" do
       response = list(@client)
       [%{admin: admin_flag, name: name_value}] = response
 

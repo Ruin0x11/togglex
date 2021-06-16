@@ -28,7 +28,7 @@ defmodule Togglex.Api.TimeEntries do
   """
   @spec create(Client.t, map) :: Togglex.response
   def create(client, time_entry_data) do
-    body = %{time_entry: Dict.merge(time_entry_data, created_with: "togglex")}
+    body = %{time_entry: Map.put(time_entry_data, :created_with, "togglex")}
     post("time_entries", client, body)
   end
 
@@ -66,7 +66,7 @@ defmodule Togglex.Api.TimeEntries do
     More info at: https://github.com/toggl/toggl_api_docs/blob/master/chapters/time_entries.md#bulk-update-time-entries-tags
   """
   @spec bulk_update_tags(Client.t, [binary], [binary], binary) :: Togglex.response
-  def bulk_update_tags(client, time_entry_ids, tags, tag_action) do
+  def bulk_update_tags(_client, _time_entry_ids, _tags, _tag_action) do
   end
 
   @doc """
@@ -158,7 +158,7 @@ defmodule Togglex.Api.TimeEntries do
   """
   @spec start(Client.t, list | map) :: Togglex.response
   def start(client, time_entry_data) do
-    body = %{time_entry: Dict.merge(time_entry_data, created_with: "togglex")}
+    body = %{time_entry: Map.put(time_entry_data, :created_with, "togglex")}
     post("time_entries/start", client, body)
   end
 

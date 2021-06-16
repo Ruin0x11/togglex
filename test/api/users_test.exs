@@ -13,7 +13,7 @@ defmodule Togglex.Api.UsersTest do
   end
 
   test "me/1" do
-    use_cassette "users#me" do
+    use_cassette "users/me" do
       response = me(@client)
       %{data: %{timezone: timezone}} = response
 
@@ -22,7 +22,7 @@ defmodule Togglex.Api.UsersTest do
   end
 
   test "me_with_related/1" do
-    use_cassette "users#me_with_related" do
+    use_cassette "users/me_with_related" do
       response = me_with_related(@client)
 
       assert Map.has_key?(response.data, :workspaces)
