@@ -44,7 +44,7 @@ defmodule Togglex do
   end
 
   def json_request(method, url, body \\ "", headers \\ [], options \\ []) do
-    body = if String.trim(body) == "", do: body, else: Jason.encode!(body)
+    body = if is_binary(body), do: body, else: Jason.encode!(body)
     request!(method, url, body, headers, options)
   end
 
