@@ -3,6 +3,8 @@ defmodule Togglex.Client do
 
   defstruct auth: nil, endpoint: nil
 
+  @api_url "api.track.toggl.com"
+
   @type auth :: %{access_token: binary}
   @type t :: %__MODULE__{auth: auth, endpoint: binary}
 
@@ -11,9 +13,9 @@ defmodule Togglex.Client do
   """
   @spec new(auth, atom) :: t
   def new(auth, :api) do
-    %__MODULE__{auth: auth, endpoint: "https://toggl.com/api/v8"}
+    %__MODULE__{auth: auth, endpoint: "https://#{@api_url}/api/v8"}
   end
   def new(auth, :reports) do
-    %__MODULE__{auth: auth, endpoint: "https://toggl.com/reports/api/v2"}
+    %__MODULE__{auth: auth, endpoint: "https://#{@api_url}/reports/api/v2"}
   end
 end
